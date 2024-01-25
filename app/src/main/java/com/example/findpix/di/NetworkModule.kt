@@ -58,3 +58,15 @@ class NetworkModule {
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 }
+
+
+@Module
+@InstallIn(SingletonComponent::class)
+class ServiceModule {
+    @Provides
+    @Singleton
+    fun provideSearchService(
+        retrofit: Retrofit
+    ): SearchApiService = retrofit.create(SearchApiService::class.java)
+}
+
