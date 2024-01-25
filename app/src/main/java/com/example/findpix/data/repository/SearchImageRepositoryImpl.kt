@@ -1,17 +1,17 @@
 package com.example.findpix.data.repository
 
 import com.example.findpix.data.source.remote.PixaBayDataSource
-import com.example.findpix.domain.entities.MappedImageItemModel
+import com.example.findpix.domain.entities.MappedImageData
 import javax.inject.Inject
 
 /**
- * This class provides an interface for accessing image search data.
+ * The class provides methods for searching for images from a remote server.
  */
 class SearchImageRepositoryImpl @Inject constructor(
     private val pixaBayDataSource: PixaBayDataSource
 ) : SearchImageRepository {
 
-    override suspend fun fetchSearchResults(query: String): List<MappedImageItemModel> {
+    override suspend fun fetchSearchResults(query: String): List<MappedImageData> {
         return try {
             val result = pixaBayDataSource.fetchSearchResults(query = query)
 
@@ -19,7 +19,7 @@ class SearchImageRepositoryImpl @Inject constructor(
                 throw IllegalStateException("Empty product list")
             }
             result.hits.map {
-                it.toImageModel()
+                it.mapToImageEntity()
             }
         } catch (e: Exception) {
             throw e
@@ -28,5 +28,5 @@ class SearchImageRepositoryImpl @Inject constructor(
 }
 
 interface SearchImageRepository {
-    suspend fun fetchSearchResults(query: String): List<MappedImageItemModel>
+    suspend fun fetchSearchResults(query: String): List<MappedImageData>
 }
