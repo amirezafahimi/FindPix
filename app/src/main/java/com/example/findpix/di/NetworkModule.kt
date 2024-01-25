@@ -70,3 +70,10 @@ class ServiceModule {
     ): SearchApiService = retrofit.create(SearchApiService::class.java)
 }
 
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RemoteDataSourceModule {
+    @Singleton
+    @Binds
+    abstract fun providePixaBayDataSource(pixaBayDataSourceImpl: PixaBayDataSourceImpl): PixaBayDataSource
+}
