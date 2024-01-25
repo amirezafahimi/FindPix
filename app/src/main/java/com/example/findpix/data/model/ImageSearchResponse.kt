@@ -1,12 +1,12 @@
 package com.example.findpix.data.model
 
-import com.example.findpix.domain.entities.MappedImageItemModel
+import com.example.findpix.domain.entities.MappedImageData
 import com.google.gson.annotations.SerializedName
 
 data class PixaBayResponse(
 
     @field:SerializedName("hits")
-    val hits: List<ImageItem> = listOf(),
+    val hits: List<ImageData> = listOf(),
 
     @field:SerializedName("total")
     val total: Int? = null,
@@ -15,7 +15,7 @@ data class PixaBayResponse(
     val totalHits: Int? = null
 )
 
-data class ImageItem(
+data class ImageData(
 
     @field:SerializedName("webformatHeight")
     val webformatHeight: Int? = null,
@@ -83,7 +83,7 @@ data class ImageItem(
     @field:SerializedName("likes")
     val likes: Int? = null
 ) {
-    fun toImageModel() = MappedImageItemModel(
+    fun mapToImageEntity() = MappedImageData(
         imageId = id?.toLong() ?: -1,
         user = user ?: "",
         url = previewURL ?: "",
@@ -97,31 +97,3 @@ data class ImageItem(
         userImageURL = userImageURL
     )
 }
-
-/*data class ImageModel(
-	val imageId: Long = -1,
-	val userName: String,
-	val url: String,
-	val likes: String,
-	val downloads: String,
-	val comments: String,
-	val tags: List<String>,
-	val largeImageURL: String?,
-	val previewURL:String?,
-	val userImageURL: String?
-)
-
-
-
-fun ImageItem.toImageModel() = ImageModel(
-	imageId = id?.toLong() ?: -1,
-	userName = user ?: "",
-	url = previewURL ?: "",
-	likes = likes.toString(),
-	downloads = downloads.toString(),
-	comments = comments.toString(),
-	tags = tags?.split(", ") ?: emptyList(),
-	largeImageURL = largeImageURL,
-	previewURL = previewURL,
-	userImageURL= userImageURL
-)*/
