@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Find Pix</string>
+    <string name="cd_clear_search">Clear Search Text</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ask_more_details">Do you want to see more details?</string>
 </resources>
