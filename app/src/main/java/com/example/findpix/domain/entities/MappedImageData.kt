@@ -12,7 +12,7 @@ data class MappedImageData(
     val downloads: String,
     val comments: String,
     val views: String,
-    val tags: List<String>,
+    private val tags: List<String>,
     val largeImageURL: String?,
     val previewURL:String?,
     val userImageURL: String?

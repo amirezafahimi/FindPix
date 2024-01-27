@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,11 +34,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -152,7 +155,7 @@ fun SearchBoxPreview() {
                     .fillMaxWidth()
                     .padding(
                         start = 16.dp,
-                        end = 16.dp, top = 8.dp, bottom = 4.dp
+                        end = 16.dp, top = 16.dp, bottom = 4.dp
                     ),
                 onSearchClicked = {}
             )
@@ -160,13 +163,15 @@ fun SearchBoxPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun SearchBox(
     modifier: Modifier = Modifier,
     onSearchClicked: (query: String) -> Unit
 ) {
-    val query = remember { mutableStateOf("") }
+    val query = remember { mutableStateOf ("") }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
     TextField(
         modifier = modifier
             .testTag("")
@@ -175,6 +180,7 @@ fun SearchBox(
             imeAction = ImeAction.Search,
         ), keyboardActions = KeyboardActions(onSearch = {
             onSearchClicked(query.value)
+            keyboardController?.hide()
         }),
         value = query.value,
         onValueChange = {
@@ -254,6 +260,35 @@ fun DetailsDialogComposable(
             )
         }
     )
+}
+
+
+@Composable
+fun AlertDialogExample () {
+// Create a state variable to store the visibility of the dialog
+    val showDialog = remember { mutableStateOf (true) }
+// Show the dialog based on the state variable
+    if (showDialog.value) {
+// Create an alert dialog with the onDismissRequest parameter
+        AlertDialog (
+            onDismissRequest = {
+// Set the state variable to false when the user clicks outside the dialog or on the back button
+                showDialog.value = false
+            },
+            title = {
+                Text ("This is an alert dialog")
+            },
+            text = {
+                Text ("You can dismiss this dialog by clicking outside or on the back button")
+            },
+            confirmButton = {
+// Provide a button for the user to close the dialog
+                Button (onClick = { showDialog.value = false }) {
+                    Text ("OK")
+                }
+            }
+        )
+    }
 }
 
 
