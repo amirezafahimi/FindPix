@@ -8,6 +8,7 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -44,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -56,16 +58,15 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil.compose.rememberAsyncImagePainter
 import com.example.findpix.R
 import com.example.findpix.data.model.ImageData
 import com.example.findpix.domain.entities.MappedImageData
@@ -258,10 +259,10 @@ private fun ImageItemComposable(
             }
         }
         Box(modifier = Modifier.height(200.dp)) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current).data(item.largeImageURL)
-                    .crossfade(true).build(),
-                contentDescription = item.user,
+            Image(
+                painter = rememberAsyncImagePainter(item.largeImageURL),
+                contentDescription = "Image from Coil",
+                modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
 
@@ -285,17 +286,18 @@ private fun ImageItemComposable(
                 Column {
                     Text(
                         text = "${item.user} ",
-                        style = TextStyle(color = Color.White, fontSize = 16.sp),
+                        style = TextStyle(color = Color.White, fontSize = 14.sp),
+                        fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Row {
                         item.getTags().forEach { tag ->
                             Text(
-                                text = "$tag",
+                                text = tag,
                                 style = TextStyle(color = Color.White, fontSize = 12.sp),
                                 modifier = Modifier
                                     .background(
-                                        color = colorResource(id = R.color.black_50),
+                                        color = Color.Black.copy(0.5f),
                                         shape = RoundedCornerShape(10.dp)
                                     )
                                     .padding(horizontal = 8.dp, vertical = 4.dp)
@@ -333,7 +335,7 @@ fun SearchBox(
     modifier: Modifier = Modifier,
     onSearchClicked: (query: String) -> Unit
 ) {
-    val query = remember { mutableStateOf("") }
+    val query = rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     TextField(

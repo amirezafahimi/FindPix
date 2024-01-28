@@ -13,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.findpix.domain.entities.MappedImageData
+import com.example.findpix.ui.detail.ImageDetailScreen
 import com.example.findpix.ui.explore.ExploreScreen
 import com.example.findpix.ui.theme.FindPixTheme
 import com.example.findpix.util.NavDestinations
@@ -42,27 +44,19 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(NavDestinations.DETAIL_SCREEN) {
-                            //TODO: Detail Screen
+                            navController
+                                .previousBackStackEntry
+                                ?.savedStateHandle
+                                ?.get<MappedImageData>("imageData")
+                                ?.let {
+                                    ImageDetailScreen(imageData = it) {
+                                        navController.navigateUp()
+                                    }
+                                }
                         }
                     }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FindPixTheme {
-        Greeting("Android")
     }
 }

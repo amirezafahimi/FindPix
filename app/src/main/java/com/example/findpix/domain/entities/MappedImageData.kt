@@ -29,7 +29,7 @@ data class MappedImageData(
             val size = string.length
 
             // Add the string to the selected list if its size is less than 40
-            if (totalLength + size < 40) {
+            if (totalLength + size < 25) {
                 selectedStrings.add(string)
                 totalLength += size
             }
