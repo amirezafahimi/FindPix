@@ -13,9 +13,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.findpix.ui.explore.ExploreScreen
 import com.example.findpix.ui.theme.FindPixTheme
 import com.example.findpix.util.NavDestinations
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +32,13 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = NavDestinations.EXPLORE_SCREEN) {
                         composable(NavDestinations.EXPLORE_SCREEN) {
-                            //TODO: Explore Screen
+                            ExploreScreen(onNextScreen = { imageData ->
+                                navController.currentBackStackEntry?.savedStateHandle?.set(
+                                    key = "imageData",
+                                    value = imageData
+                                )
+                                navController.navigate(NavDestinations.DETAIL_SCREEN)
+                            })
                         }
 
                         composable(NavDestinations.DETAIL_SCREEN) {

@@ -25,8 +25,8 @@ class ExploreViewModel @Inject constructor(
     private val searchImageUseCase: SearchImageUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(SearchImageState())
-    val uiState: StateFlow<SearchImageState> = _uiState
+    private val _uiState = MutableStateFlow(SearchResultState())
+    val uiState: StateFlow<SearchResultState> = _uiState
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     fun searchImage(query: String) {
@@ -71,7 +71,7 @@ class ExploreViewModel @Inject constructor(
     }
 }
 
-data class SearchImageState(
+data class SearchResultState(
 
     val isLoading: Boolean = false,
     val error: String? = null,

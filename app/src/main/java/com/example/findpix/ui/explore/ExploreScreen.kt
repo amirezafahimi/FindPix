@@ -1,7 +1,16 @@
 package com.example.findpix.ui.explore
 
+import android.content.res.Configuration
+import android.widget.Toast
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +20,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -19,7 +30,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,14 +41,18 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
@@ -49,12 +63,160 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.findpix.R
 import com.example.findpix.data.model.ImageData
 import com.example.findpix.domain.entities.MappedImageData
 
+
+@Composable
+fun ExploreScreen(
+    viewModel: ExploreViewModel = hiltViewModel(),
+    onNextScreen: (item: MappedImageData) -> Unit
+) {
+
+    ExploreScreenContent(
+        modifier = Modifier.fillMaxSize(),
+        fetchData = viewModel::searchImage,
+        uiState = viewModel.uiState.collectAsState().value,
+        onNextScreen = onNextScreen
+    )
+}
+
+@Composable
+fun LoadingComposable() {
+    Column {
+        val configuration = LocalConfiguration.current
+
+        val columnsCount = when (configuration.orientation) {
+            Configuration.ORIENTATION_LANDSCAPE -> 2
+            else -> 1
+        }
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(columnsCount),
+            modifier = Modifier.padding(10.dp)
+        ) {
+            items(20) {
+                LoadingShimmer()
+            }
+        }
+    }
+}
+
+@Composable
+internal fun ExploreScreenContent(
+    modifier: Modifier = Modifier,
+    uiState: SearchResultState,
+    fetchData: (query: String) -> Unit,
+    onNextScreen: (item: MappedImageData) -> Unit
+) {
+
+    Surface(
+        modifier = modifier,
+        color = MaterialTheme.colorScheme.background
+    ) {
+        Column(modifier = modifier) {
+
+            SearchBox(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp, top = 16.dp, bottom = 4.dp
+                    ),
+                onSearchClicked = { query ->
+                    fetchData(query)
+                }
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            if (uiState.isLoading) {
+                LoadingComposable()
+            } else {
+                val configuration = LocalConfiguration.current
+
+                val columnsCount = when (configuration.orientation) {
+                    Configuration.ORIENTATION_LANDSCAPE -> 2
+                    else -> 1
+                }
+
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(columnsCount),
+                    modifier = Modifier.padding(10.dp)
+                ) {
+                    items(uiState.success.size) {
+                        ImageItemComposable(
+                            modifier = Modifier.fillMaxWidth(),
+                            item = uiState.success[it],
+                            onNextScreen = onNextScreen
+                        )
+                    }
+                }
+            }
+
+            uiState.error?.let { error ->
+                Toast.makeText(LocalContext.current, error, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun DetailsDialogPreview() {
+    MaterialTheme {
+        Surface {
+            DetailsDialogComposable(
+                modifier = Modifier.fillMaxWidth(),
+                showDialog = false,
+                dismissAction = {},
+                confirmAction = {}
+            )
+        }
+    }
+}
+
+@Composable
+fun DetailsDialogComposable(
+    modifier: Modifier = Modifier,
+    showDialog: Boolean,
+    dismissAction: () -> Unit,
+    confirmAction: () -> Unit
+) {
+    if (showDialog)
+        AlertDialog(
+            modifier = modifier.testTag(""),
+            onDismissRequest = { dismissAction() },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        confirmAction()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.yes))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dismissAction()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.no))
+                }
+            },
+            text = {
+                Text(
+                    text = stringResource(id = R.string.ask_more_details)
+                )
+            }
+        )
+}
 
 @Preview(showBackground = true)
 @Composable
@@ -171,7 +333,7 @@ fun SearchBox(
     modifier: Modifier = Modifier,
     onSearchClicked: (query: String) -> Unit
 ) {
-    val query = remember { mutableStateOf ("") }
+    val query = remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
 
     TextField(
@@ -215,54 +377,52 @@ fun SearchBox(
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DetailsDialogPreview() {
-    MaterialTheme {
-        Surface {
-            DetailsDialogComposable(
-                modifier = Modifier.fillMaxWidth(),
-                showDialog = false,
-                dismissAction = {},
-                confirmAction = {}
-            )
-        }
-    }
+fun LoadingShimmer() {
+    val shimmerColors = listOf(
+        Color.LightGray.copy(alpha = 0.6f),
+        Color.LightGray.copy(alpha = 0.2f),
+        Color.LightGray.copy(alpha = 0.6f),
+    )
+
+    val transition = rememberInfiniteTransition(label = "")
+    val translateAnim = transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1000f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(
+                durationMillis = 1000,
+                easing = FastOutSlowInEasing
+            ),
+            repeatMode = RepeatMode.Reverse
+        ), label = ""
+    )
+
+    val brush = Brush.linearGradient(
+        colors = shimmerColors,
+        start = Offset.Zero,
+        end = Offset(x = translateAnim.value, y = translateAnim.value)
+    )
+
+    ShimmerGridItem(brush = brush)
 }
 
 @Composable
-fun DetailsDialogComposable(
-    modifier: Modifier = Modifier,
-    showDialog: Boolean,
-    dismissAction: () -> Unit,
-    confirmAction: () -> Unit
-) {
-    if (showDialog)
-        AlertDialog(
-            modifier = modifier.testTag(""),
-            onDismissRequest = { dismissAction() },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        confirmAction()
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.yes))
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        dismissAction()
-                    }
-                ) {
-                    Text(text = stringResource(id = R.string.no))
-                }
-            },
-            text = {
-                Text(
-                    text = stringResource(id = R.string.ask_more_details)
-                )
-            }
-        )
+fun ShimmerGridItem(brush: Brush) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 4.dp, vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(verticalArrangement = Arrangement.Center) {
+            Spacer(
+                modifier = Modifier
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .fillMaxWidth(fraction = 1f)
+                    .background(brush)
+            )
+        }
+    }
 }
