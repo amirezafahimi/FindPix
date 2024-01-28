@@ -61,7 +61,7 @@ import com.example.findpix.domain.entities.MappedImageData
 fun ImageItemPreview() {
     MaterialTheme {
         Surface {
-            ImageItem(
+            ImageItemComposable(
                 item = ImageData().mapToImageEntity(),
                 modifier = Modifier.fillMaxWidth(),
                 onNextScreen = {}
@@ -72,19 +72,13 @@ fun ImageItemPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun ImageItem(
+private fun ImageItemComposable(
     item: MappedImageData,
     modifier: Modifier = Modifier,
     onNextScreen: (item: MappedImageData) -> Unit
 ) {
     val showDialog = remember { mutableStateOf(false) }
-    if (showDialog.value) {
-        DetailsDialogComposable(dismissAction = {
 
-        }) {
-            onNextScreen(item)
-        }
-    }
     Card(modifier = modifier
         .fillMaxWidth()
         .padding(horizontal = 4.dp, vertical = 4.dp),
@@ -93,6 +87,14 @@ private fun ImageItem(
         onClick = {
             showDialog.value = true
         }) {
+        if (showDialog.value) {
+            DetailsDialogComposable(
+                showDialog = showDialog.value,
+                dismissAction = { showDialog.value = false }) {
+                showDialog.value = false
+                onNextScreen(item)
+            }
+        }
         Box(modifier = Modifier.height(200.dp)) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current).data(item.largeImageURL)
@@ -220,6 +222,7 @@ fun DetailsDialogPreview() {
         Surface {
             DetailsDialogComposable(
                 modifier = Modifier.fillMaxWidth(),
+                showDialog = false,
                 dismissAction = {},
                 confirmAction = {}
             )
@@ -230,65 +233,36 @@ fun DetailsDialogPreview() {
 @Composable
 fun DetailsDialogComposable(
     modifier: Modifier = Modifier,
+    showDialog: Boolean,
     dismissAction: () -> Unit,
     confirmAction: () -> Unit
 ) {
-    AlertDialog(
-        modifier = modifier.testTag(""),
-        onDismissRequest = { dismissAction() },
-        confirmButton = {
-            TextButton(
-                onClick = {
-                    confirmAction()
+    if (showDialog)
+        AlertDialog(
+            modifier = modifier.testTag(""),
+            onDismissRequest = { dismissAction() },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        confirmAction()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.yes))
                 }
-            ) {
-                Text(text = stringResource(id = R.string.yes))
-            }
-        },
-        dismissButton = {
-            TextButton(
-                onClick = {
-                    dismissAction()
-                }
-            ) {
-                Text(text = stringResource(id = R.string.no))
-            }
-        },
-        text = {
-            Text(
-                text = stringResource(id = R.string.ask_more_details)
-            )
-        }
-    )
-}
-
-
-@Composable
-fun AlertDialogExample () {
-// Create a state variable to store the visibility of the dialog
-    val showDialog = remember { mutableStateOf (true) }
-// Show the dialog based on the state variable
-    if (showDialog.value) {
-// Create an alert dialog with the onDismissRequest parameter
-        AlertDialog (
-            onDismissRequest = {
-// Set the state variable to false when the user clicks outside the dialog or on the back button
-                showDialog.value = false
             },
-            title = {
-                Text ("This is an alert dialog")
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        dismissAction()
+                    }
+                ) {
+                    Text(text = stringResource(id = R.string.no))
+                }
             },
             text = {
-                Text ("You can dismiss this dialog by clicking outside or on the back button")
-            },
-            confirmButton = {
-// Provide a button for the user to close the dialog
-                Button (onClick = { showDialog.value = false }) {
-                    Text ("OK")
-                }
+                Text(
+                    text = stringResource(id = R.string.ask_more_details)
+                )
             }
         )
-    }
 }
-
-
