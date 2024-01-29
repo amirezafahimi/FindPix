@@ -5,11 +5,15 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.findpix.data.source.local.entity.ImageData
+import com.example.findpix.data.source.local.entity.SearchResultEntity
 
 @Dao
-interface PixaBayDao {
+interface AppDao {
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllImagesData(entities: List<ImageData>)
-    @Query("SELECT * FROM image_data")
-    fun getAllImagesData(): List<ImageData>
+    fun insertSearchResult(searchResult: SearchResultEntity)
+
+    @Query("SELECT * FROM last_search_results WHERE primaryKey = 1")
+    fun getSearchResult(): SearchResultEntity
+
 }

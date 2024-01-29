@@ -4,7 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import com.example.findpix.MyApplication
 import com.example.findpix.data.source.local.Database
-import com.example.findpix.data.source.local.PixaBayDao
+import com.example.findpix.data.source.local.AppDao
+import com.example.findpix.data.source.local.PixaBayLocalDataSource
+import com.example.findpix.data.source.local.PixaBayLocalDataSourceImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +36,16 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providePixaBayDao(database: Database): PixaBayDao {
-        return database.pixaBayDao()
+    fun providePixaBayDao(database: Database): AppDao {
+        return database.appDao()
     }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class LocalDataSourceModule {
+
+    @Singleton
+    @Binds
+    abstract fun provideLocalDataSource(marketLocalDataSourceImpl: PixaBayLocalDataSourceImpl): PixaBayLocalDataSource
 }

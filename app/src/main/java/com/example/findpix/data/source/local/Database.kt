@@ -4,9 +4,10 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.findpix.data.source.local.entity.ImageData
+import com.example.findpix.data.source.local.entity.SearchResultEntity
 
-@Database(entities = [ImageData::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+@Database(entities = [SearchResultEntity::class], version = 1, exportSchema = false)
+@TypeConverters(ImageDataTypeConverter::class)
 abstract class Database: RoomDatabase() {
-    abstract fun pixaBayDao(): PixaBayDao
+    abstract fun appDao(): AppDao
 }
