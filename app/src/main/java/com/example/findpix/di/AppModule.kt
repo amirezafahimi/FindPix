@@ -1,7 +1,10 @@
 package com.example.findpix.di
 
 import android.content.Context
+import androidx.room.Room
 import com.example.findpix.MyApplication
+import com.example.findpix.data.source.local.Database
+import com.example.findpix.data.source.local.PixaBayDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,4 +22,18 @@ class AppModule {
     @Singleton
     @Provides
     fun provideContext(@ApplicationContext app: Context): Context = app.applicationContext
+
+    @Singleton
+    @Provides
+    fun provideRoomAppDatabase(@ApplicationContext context: Context): Database =
+        Room.databaseBuilder(
+            context,
+            Database::class.java, "PixaBay.db"
+        ).fallbackToDestructiveMigration().build()
+
+    @Singleton
+    @Provides
+    fun providePixaBayDao(database: Database): PixaBayDao {
+        return database.pixaBayDao()
+    }
 }

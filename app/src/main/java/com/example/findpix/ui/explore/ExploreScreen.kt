@@ -194,20 +194,12 @@ fun DetailsDialogComposable(
             modifier = modifier.testTag(""),
             onDismissRequest = { dismissAction() },
             confirmButton = {
-                TextButton(
-                    onClick = {
-                        confirmAction()
-                    }
-                ) {
+                TextButton(onClick = { confirmAction() }) {
                     Text(text = stringResource(id = R.string.yes))
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = {
-                        dismissAction()
-                    }
-                ) {
+                TextButton(onClick = { dismissAction() }) {
                     Text(text = stringResource(id = R.string.no))
                 }
             },
@@ -261,7 +253,7 @@ private fun ImageItemComposable(
         Box(modifier = Modifier.height(200.dp)) {
             Image(
                 painter = rememberAsyncImagePainter(item.largeImageURL),
-                contentDescription = "Image from Coil",
+                contentDescription = item.user,
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
