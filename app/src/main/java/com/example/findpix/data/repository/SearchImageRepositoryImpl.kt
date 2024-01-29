@@ -4,6 +4,7 @@ import com.example.findpix.data.source.local.PixaBayLocalDataSource
 import com.example.findpix.data.source.local.entity.ImageData
 import com.example.findpix.data.source.local.entity.SearchResultEntity
 import com.example.findpix.data.source.remote.PixaBayDataSource
+import com.example.findpix.domain.entity.LastSearchResult
 import com.example.findpix.domain.entity.MappedImageData
 import javax.inject.Inject
 
@@ -17,18 +18,13 @@ class SearchImageRepositoryImpl @Inject constructor(
 
     override suspend fun fetchDataByQuery(query: String): List<MappedImageData> {
         return try {
-            val result = if(query != "x") {
-                pixaBayDataSource.fetchSearchResults(query = query).hits.map {
-                    it.mapToImageEntity()
-                }
-                /*if (result.hits.isEmpty()) {
-                    throw IllegalStateException("Empty product list")
-                }*/
-            } else pixaBayLocalDataSource.getLastSearchResult().results.map {
-                it.mapToImageEntity()
+            val results = pixaBayDataSource.fetchSearchResults(query = query)
+            if (results.hits.isEmpty()) {
+                throw IllegalStateException("Nothing found")
             }
-
-            result.also { images ->
+            results.hits.map {
+                it.mapToImageEntity()
+            }.also { images ->
                 pixaBayLocalDataSource.saveSearchResult(
                     SearchResultEntity(
                         query = query,
@@ -55,17 +51,21 @@ class SearchImageRepositoryImpl @Inject constructor(
         }
     }
 
-    /*override suspend fun getInitialData(): List<MappedImageData> {
-        val result = pixaBayLocalDataSource.getLastSearchResult().results.map { it.mapToImageEntity() }
-        if(result.isNotEmpty()) {
+    override suspend fun fetchOnlineInitialData(): LastSearchResult {
+        pixaBayLocalDataSource.getLastSearchResult()?.let { search ->
+            return LastSearchResult(search.query, fetchDataByQuery(query = search.query))
+        } ?: return LastSearchResult("fruits", fetchDataByQuery("fruits"))
+    }
 
-        } else {
-
-        }
-    }*/
+    override suspend fun getOfflineInitialData(): LastSearchResult {
+        pixaBayLocalDataSource.getLastSearchResult()?.let { search ->
+            return LastSearchResult(search.query, search.results.map { it.mapToImageEntity() })
+        } ?: return LastSearchResult("fruits", listOf())
+    }
 }
 
 interface SearchImageRepository {
     suspend fun fetchDataByQuery(query: String): List<MappedImageData>
-    //suspend fun getInitialData(): List<MappedImageData>
+    suspend fun fetchOnlineInitialData(): LastSearchResult
+    suspend fun getOfflineInitialData(): LastSearchResult
 }

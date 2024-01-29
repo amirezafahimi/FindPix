@@ -42,6 +42,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -68,10 +69,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import coil.request.ImageRequest
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
-import com.bumptech.glide.load.engine.cache.DiskCache
 import com.example.findpix.R
 import com.example.findpix.data.model.ImageData
 import com.example.findpix.domain.entity.MappedImageData
@@ -87,6 +84,7 @@ fun ExploreScreen(
         modifier = Modifier.fillMaxSize(),
         fetchData = viewModel::searchImage,
         uiState = viewModel.uiState.collectAsState().value,
+        lastQueryState = viewModel.lastQueryState.collectAsState().value,
         onNextScreen = onNextScreen
     )
 }
@@ -116,6 +114,7 @@ fun LoadingComposable() {
 internal fun ExploreScreenContent(
     modifier: Modifier = Modifier,
     uiState: SearchResultState,
+    lastQueryState: String,
     fetchData: (query: String) -> Unit,
     onNextScreen: (item: MappedImageData) -> Unit
 ) {
@@ -135,7 +134,8 @@ internal fun ExploreScreenContent(
                     ),
                 onSearchClicked = { query ->
                     fetchData(query)
-                }
+                },
+                lastQueryState = lastQueryState
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -230,7 +230,7 @@ fun ImageItemPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImageItemComposable(
     item: MappedImageData,
@@ -325,7 +325,8 @@ fun SearchBoxPreview() {
                         start = 16.dp,
                         end = 16.dp, top = 16.dp, bottom = 4.dp
                     ),
-                onSearchClicked = {}
+                onSearchClicked = {},
+                lastQueryState = ""
             )
         }
     }
@@ -335,10 +336,14 @@ fun SearchBoxPreview() {
 @Composable
 fun SearchBox(
     modifier: Modifier = Modifier,
-    onSearchClicked: (query: String) -> Unit
+    onSearchClicked: (query: String) -> Unit,
+    lastQueryState: String
 ) {
     val query = rememberSaveable { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
+    LaunchedEffect(lastQueryState) {
+        query.value = lastQueryState
+    }
 
     TextField(
         modifier = modifier

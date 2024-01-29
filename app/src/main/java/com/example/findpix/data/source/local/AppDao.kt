@@ -14,6 +14,6 @@ interface AppDao {
     fun insertSearchResult(searchResult: SearchResultEntity)
 
     @Query("SELECT * FROM last_search_results WHERE primaryKey = 1")
-    fun getSearchResult(): SearchResultEntity
+    fun getSearchResult(): SearchResultEntity?
 
 }

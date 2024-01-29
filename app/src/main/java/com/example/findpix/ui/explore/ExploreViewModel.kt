@@ -3,6 +3,7 @@ package com.example.findpix.ui.explore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.domain.usecase.GetInitialDataUseCase
 import com.example.findpix.domain.usecase.SearchImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,40 +23,40 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val searchImageUseCase: SearchImageUseCase
+    private val searchImageUseCase: SearchImageUseCase,
+    private val getInitialDataUseCase: GetInitialDataUseCase
 ) : ViewModel() {
+
+    private val _lastQueryState: MutableStateFlow<String> = MutableStateFlow("")
+    val lastQueryState: StateFlow<String> = _lastQueryState
 
     private val _uiState = MutableStateFlow(SearchResultState())
     val uiState: StateFlow<SearchResultState> = _uiState
 
-    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-    fun searchImage(query: String) {
+    init {
+        viewModelScope.launch {
+            getInitialDataUseCase.run().collect {
+                _lastQueryState.value = it.query
+                _uiState.value = uiState.value.copy(
+                    isLoading = false,
+                    success = it.imagesData,
+                )
+            }
+        }
+    }
 
+    fun searchImage(query: String) {
         _uiState.value = uiState.value.copy(
             isLoading = true
         )
 
         viewModelScope.launch {
-            flowOf(query)
-                .debounce(300)
-                .filter { query ->
-                    return@filter query.isNotEmpty()
-                }
-                .distinctUntilChanged()
-                .flatMapLatest { query ->
-                    searchImageUseCase.run(query).catch { error ->
-                        onError(error.message.toString())
-                    }
-                }
-                .flowOn(Dispatchers.Default)
-                .catch { error ->
-                    onError(error.message.toString())
-                }
-                .collect {
+            searchImageUseCase.run(query).catch { error ->
+                onError(error.message.toString())
+            }.collect {
                     _uiState.value = uiState.value.copy(
                         isLoading = false,
                         success = it,
-                        currentImageNode = null
                     )
                 }
         }
@@ -66,7 +67,6 @@ class ExploreViewModel @Inject constructor(
             isLoading = false,
             error = error,
             success = emptyList(),
-            currentImageNode = null
         )
     }
 }
@@ -76,5 +76,4 @@ data class SearchResultState(
     val isLoading: Boolean = false,
     val error: String? = null,
     val success: List<MappedImageData> = emptyList(),
-    val currentImageNode: MappedImageData? = null
 )

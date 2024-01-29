@@ -7,7 +7,7 @@ import javax.inject.Inject
 class PixaBayLocalDataSourceImpl @Inject constructor(
     private val appDao: AppDao
 ) : PixaBayLocalDataSource {
-    override fun getLastSearchResult(): SearchResultEntity = appDao.getSearchResult()
+    override fun getLastSearchResult(): SearchResultEntity? = appDao.getSearchResult()
 
     override fun saveSearchResult(searchResult: SearchResultEntity) {
         appDao.insertSearchResult(searchResult)
@@ -15,6 +15,6 @@ class PixaBayLocalDataSourceImpl @Inject constructor(
 }
 
 interface PixaBayLocalDataSource {
-    fun getLastSearchResult(): SearchResultEntity
+    fun getLastSearchResult(): SearchResultEntity?
     fun saveSearchResult(searchResult: SearchResultEntity)
 }
