@@ -28,7 +28,7 @@ class AppModule {
     fun provideRoomAppDatabase(@ApplicationContext context: Context): Database =
         Room.databaseBuilder(
             context,
-            Database::class.java, "PixaBay.db"
+            Database::class.java, "FindPix.db"
         ).fallbackToDestructiveMigration().build()
 
     @Singleton
