@@ -28,14 +28,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.example.findpix.data.model.ImageData
-import com.example.findpix.domain.entities.MappedImageData
+import com.example.findpix.domain.entity.MappedImageData
 
 
 @Composable
@@ -57,11 +59,16 @@ internal fun DetailScreenContent(
 
     Surface(modifier = modifier) {
 
+        val imageLoader = ImageLoader.Builder(LocalContext.current)
+            .respectCacheHeaders(false).build()
         Image(
-            painter = rememberAsyncImagePainter(item.largeImageURL),
+            painter = rememberAsyncImagePainter(
+                item.largeImageURL,
+                imageLoader = imageLoader
+            ),
             contentDescription = item.user,
             modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.Fit,
         )
 
         Box(

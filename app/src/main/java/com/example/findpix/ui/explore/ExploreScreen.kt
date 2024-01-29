@@ -66,10 +66,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.bumptech.glide.load.engine.cache.DiskCache
 import com.example.findpix.R
 import com.example.findpix.data.model.ImageData
-import com.example.findpix.domain.entities.MappedImageData
+import com.example.findpix.domain.entity.MappedImageData
 
 
 @Composable
@@ -225,7 +230,7 @@ fun ImageItemPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalGlideComposeApi::class)
 @Composable
 private fun ImageItemComposable(
     item: MappedImageData,
@@ -251,11 +256,16 @@ private fun ImageItemComposable(
             }
         }
         Box(modifier = Modifier.height(200.dp)) {
+            val imageLoader = ImageLoader.Builder(LocalContext.current)
+                .respectCacheHeaders(false).build()
             Image(
-                painter = rememberAsyncImagePainter(item.largeImageURL),
+                painter = rememberAsyncImagePainter(
+                    item.largeImageURL,
+                    imageLoader = imageLoader
+                ),
                 contentDescription = item.user,
                 modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
             )
 
             Box(

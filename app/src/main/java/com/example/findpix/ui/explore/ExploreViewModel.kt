@@ -2,8 +2,8 @@ package com.example.findpix.ui.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.findpix.domain.entities.MappedImageData
-import com.example.findpix.domain.usecases.SearchImageUseCase
+import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.domain.usecase.SearchImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

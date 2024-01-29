@@ -1,4 +1,4 @@
-package com.example.findpix.domain.entities
+package com.example.findpix.domain.entity
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

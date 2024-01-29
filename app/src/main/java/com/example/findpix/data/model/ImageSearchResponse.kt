@@ -1,6 +1,6 @@
 package com.example.findpix.data.model
 
-import com.example.findpix.domain.entities.MappedImageData
+import com.example.findpix.domain.entity.MappedImageData
 import com.google.gson.annotations.SerializedName
 
 data class PixaBayResponse(
