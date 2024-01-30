@@ -51,21 +51,19 @@ class SearchImageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchOnlineInitialData(): LastSearchResult {
-        pixaBayLocalDataSource.getLastSearchResult()?.let { search ->
-            return LastSearchResult(search.query, fetchDataByQuery(query = search.query))
-        } ?: return LastSearchResult("fruits", fetchDataByQuery("fruits"))
-    }
-
     override suspend fun getOfflineInitialData(): LastSearchResult {
         pixaBayLocalDataSource.getLastSearchResult()?.let { search ->
             return LastSearchResult(search.query, search.results.map { it.mapToImageEntity() })
         } ?: return LastSearchResult("fruits", listOf())
     }
+
+    override suspend fun getLastQuery(): String {
+        pixaBayLocalDataSource.getLastSearchResult()?.let { return it.query } ?: return "fruits"
+    }
 }
 
 interface SearchImageRepository {
     suspend fun fetchDataByQuery(query: String): List<MappedImageData>
-    suspend fun fetchOnlineInitialData(): LastSearchResult
     suspend fun getOfflineInitialData(): LastSearchResult
+    suspend fun getLastQuery(): String
 }

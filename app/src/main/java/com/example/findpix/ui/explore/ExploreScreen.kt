@@ -42,6 +42,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -72,6 +73,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.findpix.R
 import com.example.findpix.data.model.ImageData
 import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.util.NetworkUtils
 
 
 @Composable
@@ -79,7 +81,18 @@ fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
     onNextScreen: (item: MappedImageData) -> Unit
 ) {
-
+    val isInitialized = rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    LaunchedEffect(isInitialized) {
+        if (!isInitialized.value) {
+            if (NetworkUtils.isOnline(context = context)) {
+                viewModel.initOnlineMode()
+            } else {
+                viewModel.initOfflineMode()
+            }
+            isInitialized.value = true
+        }
+    }
     ExploreScreenContent(
         modifier = Modifier.fillMaxSize(),
         fetchData = viewModel::searchImage,
