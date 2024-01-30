@@ -2,7 +2,7 @@
 
 ## Overview
 
-This Android application is an image search app that allows users to explore and discover images based on keywords. The app utilizes the Pixabay public web services API to fetch and display image results. It is built using modern Android development practices, including the MVVM architecture, Jetpack Compose, Coroutines, Hilt, Coil, Retrofit, and follows clean architecture principles.
+This Android application is an image search app that allows users to explore and discover images based on keywords. The app utilizes the Pixabay public web services API to fetch and display image results. It is built using modern Android development practices, including Clean Architecture, Jetpack Compose, Coroutines, Hilt, Coil, Retrofit, and follows best practices for organized, efficient, and readable code.
 
 ## Tech Stack
 
