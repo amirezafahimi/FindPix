@@ -8,10 +8,16 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
-class GetOfflineInitialDataUseCase@Inject constructor(
+class GetOfflineInitialDataUseCase @Inject constructor(
     private val repository: SearchImageRepository
 ) {
+    /**
+     * Executes the use case to retrieve offline initial data from the repository.
+     *
+     * @return A flow emitting the last search result as [LastSearchResult].
+     */
     fun run(): Flow<LastSearchResult> = flow {
+        // Emit the offline initial data retrieved from the repository
         emit(repository.getOfflineInitialData())
-    }.flowOn(Dispatchers.IO)
+    }.flowOn(Dispatchers.IO) // Execute the flow on the IO dispatcher for background thread processing
 }

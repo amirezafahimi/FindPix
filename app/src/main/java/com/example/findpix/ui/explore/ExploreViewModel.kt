@@ -20,12 +20,17 @@ class ExploreViewModel @Inject constructor(
     private val getLastQueryUseCase: GetLastQueryUseCase
 ) : ViewModel() {
 
+    // StateFlow to hold the last search query
     private val _lastQueryState: MutableStateFlow<String> = MutableStateFlow("")
     val lastQueryState: StateFlow<String> = _lastQueryState
 
+    // StateFlow to hold the UI state (loading, error, success)
     private val _uiState = MutableStateFlow(SearchResultState())
     val uiState: StateFlow<SearchResultState> = _uiState
 
+    /**
+     * Initialize the ViewModel in offline mode by fetching initial data from the repository.
+     */
     fun initOfflineMode() {
         viewModelScope.launch {
             getOfflineInitialDataUseCase.run().collect {
@@ -38,6 +43,9 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Initialize the ViewModel in online mode by fetching the last query and initiating a search.
+     */
     fun initOnlineMode() {
         _uiState.value = uiState.value.copy(isLoading = true)
 
@@ -49,6 +57,11 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Perform a search for images based on the provided query.
+     *
+     * @param query The search query for images.
+     */
     fun searchImage(query: String) {
         _uiState.value = uiState.value.copy(isLoading = true)
 
@@ -65,6 +78,11 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Handle errors by updating the UI state with the error message.
+     *
+     * @param error The error message.
+     */
     private fun onError(error: String) {
         _uiState.value = uiState.value.copy(
             isLoading = false,
@@ -74,8 +92,14 @@ class ExploreViewModel @Inject constructor(
     }
 }
 
+/**
+ * Data class representing the state of the search results.
+ *
+ * @property isLoading Indicates whether the search is in progress.
+ * @property error The error message, if any.
+ * @property success The list of [ImageItem] representing the successful search results.
+ */
 data class SearchResultState(
-
     val isLoading: Boolean = false,
     val error: String? = null,
     val success: List<ImageItem> = emptyList(),
