@@ -42,7 +42,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -71,15 +70,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import com.example.findpix.R
-import com.example.findpix.data.model.ImageData
-import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.data.model.ImageResponse
+import com.example.findpix.domain.entity.ImageItem
 import com.example.findpix.util.NetworkUtils
 
 
 @Composable
 fun ExploreScreen(
     viewModel: ExploreViewModel = hiltViewModel(),
-    onNextScreen: (item: MappedImageData) -> Unit
+    onNextScreen: (item: ImageItem) -> Unit
 ) {
     val isInitialized = rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
@@ -129,7 +128,7 @@ internal fun ExploreScreenContent(
     uiState: SearchResultState,
     lastQueryState: String,
     fetchData: (query: String) -> Unit,
-    onNextScreen: (item: MappedImageData) -> Unit
+    onNextScreen: (item: ImageItem) -> Unit
 ) {
 
     Surface(
@@ -235,7 +234,7 @@ fun ImageItemPreview() {
     MaterialTheme {
         Surface {
             ImageItemComposable(
-                item = ImageData().mapToImageEntity(),
+                item = ImageResponse().mapToImageEntity(),
                 modifier = Modifier.fillMaxWidth(),
                 onNextScreen = {}
             )
@@ -246,9 +245,9 @@ fun ImageItemPreview() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ImageItemComposable(
-    item: MappedImageData,
+    item: ImageItem,
     modifier: Modifier = Modifier,
-    onNextScreen: (item: MappedImageData) -> Unit
+    onNextScreen: (item: ImageItem) -> Unit
 ) {
     val showDialog = remember { mutableStateOf(false) }
 

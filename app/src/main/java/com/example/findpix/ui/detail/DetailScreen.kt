@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
-import com.example.findpix.data.model.ImageData
-import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.data.model.ImageResponse
+import com.example.findpix.domain.entity.ImageItem
 
 
 @Composable
-internal fun ImageDetailScreen(imageData: MappedImageData, onBackClicked: () -> Unit) {
+internal fun ImageDetailScreen(imageData: ImageItem, onBackClicked: () -> Unit) {
 
     DetailScreenContent(
         modifier = Modifier.fillMaxSize(),
@@ -53,7 +53,7 @@ internal fun ImageDetailScreen(imageData: MappedImageData, onBackClicked: () -> 
 @Composable
 internal fun DetailScreenContent(
     modifier: Modifier = Modifier,
-    item: MappedImageData,
+    item: ImageItem,
     onBackBtnClicked: () -> Unit
 ) {
 
@@ -118,7 +118,7 @@ fun BackButton(
 @Composable
 fun DetailBottomCard(
     modifier: Modifier = Modifier,
-    item: MappedImageData
+    item: ImageItem
 ) {
     Row(modifier = modifier,
         verticalAlignment = Alignment.CenterVertically) {
@@ -209,7 +209,7 @@ fun DetailBottomCard(
 fun SearchScreenPreview() {
     MaterialTheme {
         Surface {
-            ImageDetailScreen(ImageData().mapToImageEntity()) {}
+            ImageDetailScreen(ImageResponse().mapToImageEntity()) {}
         }
     }
 }

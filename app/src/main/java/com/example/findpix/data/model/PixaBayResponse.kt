@@ -1,12 +1,12 @@
 package com.example.findpix.data.model
 
-import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.domain.entity.ImageItem
 import com.google.gson.annotations.SerializedName
 
 data class PixaBayResponse(
 
     @field:SerializedName("hits")
-    val hits: List<ImageData> = listOf(),
+    val hits: List<ImageResponse> = listOf(),
 
     @field:SerializedName("total")
     val total: Int? = null,
@@ -15,7 +15,7 @@ data class PixaBayResponse(
     val totalHits: Int? = null
 )
 
-data class ImageData(
+data class ImageResponse(
 
     @field:SerializedName("webformatHeight")
     val webformatHeight: Int? = null,
@@ -83,7 +83,7 @@ data class ImageData(
     @field:SerializedName("likes")
     val likes: Int? = null
 ) {
-    fun mapToImageEntity() = MappedImageData(
+    fun mapToImageEntity() = ImageItem(
         imageId = id?.toLong() ?: -1,
         user = user ?: "",
         url = previewURL ?: "",

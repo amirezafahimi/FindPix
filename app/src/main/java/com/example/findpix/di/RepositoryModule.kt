@@ -1,7 +1,7 @@
 package com.example.findpix.di
 
-import com.example.findpix.data.repository.SearchImageRepository
 import com.example.findpix.data.repository.SearchImageRepositoryImpl
+import com.example.findpix.domain.repository.SearchImageRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

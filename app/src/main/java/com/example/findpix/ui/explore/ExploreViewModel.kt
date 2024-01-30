@@ -2,7 +2,7 @@ package com.example.findpix.ui.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.domain.entity.ImageItem
 import com.example.findpix.domain.usecase.GetLastQueryUseCase
 import com.example.findpix.domain.usecase.GetOfflineInitialDataUseCase
 import com.example.findpix.domain.usecase.SearchImageUseCase
@@ -78,5 +78,5 @@ data class SearchResultState(
 
     val isLoading: Boolean = false,
     val error: String? = null,
-    val success: List<MappedImageData> = emptyList(),
+    val success: List<ImageItem> = emptyList(),
 )

@@ -5,8 +5,8 @@ import androidx.room.Room
 import com.example.findpix.MyApplication
 import com.example.findpix.data.source.local.Database
 import com.example.findpix.data.source.local.AppDao
-import com.example.findpix.data.source.local.PixaBayLocalDataSource
-import com.example.findpix.data.source.local.PixaBayLocalDataSourceImpl
+import com.example.findpix.data.source.local.LocalDataSource
+import com.example.findpix.data.source.local.LocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -47,5 +47,5 @@ abstract class LocalDataSourceModule {
 
     @Singleton
     @Binds
-    abstract fun provideLocalDataSource(marketLocalDataSourceImpl: PixaBayLocalDataSourceImpl): PixaBayLocalDataSource
+    abstract fun provideLocalDataSource(marketLocalDataSourceImpl: LocalDataSourceImpl): LocalDataSource
 }

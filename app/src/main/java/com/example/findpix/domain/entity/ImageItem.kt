@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class MappedImageData(
+data class ImageItem(
     val imageId: Long = -1,
     val user: String,
     val url: String,

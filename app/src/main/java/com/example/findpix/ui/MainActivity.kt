@@ -12,7 +12,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.domain.entity.ImageItem
 import com.example.findpix.ui.detail.ImageDetailScreen
 import com.example.findpix.ui.explore.ExploreScreen
 import com.example.findpix.ui.explore.ExploreViewModel
@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity() {
                             navController
                                 .previousBackStackEntry
                                 ?.savedStateHandle
-                                ?.get<MappedImageData>("imageData")
+                                ?.get<ImageItem>("imageData")
                                 ?.let {
                                     ImageDetailScreen(imageData = it) {
                                         navController.navigateUp()

@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.findpix.data.source.local.ImageDataTypeConverter
-import com.example.findpix.domain.entity.MappedImageData
+import com.example.findpix.domain.entity.ImageItem
 
 @Entity(tableName = "last_search_results")
-data class SearchResultEntity(
+data class LastSearch(
     @PrimaryKey
     val primaryKey: Int = 1,
     val query: String,
@@ -28,7 +28,7 @@ data class ImageData(
     val previewURL:String,
     val userImageURL: String
 ) {
-    fun mapToImageEntity() = MappedImageData(
+    fun mapToImageEntity() = ImageItem(
         imageId = imageId,
         user = user,
         url = previewURL,

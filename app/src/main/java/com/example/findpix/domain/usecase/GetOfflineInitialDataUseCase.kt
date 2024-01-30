@@ -1,7 +1,7 @@
 package com.example.findpix.domain.usecase
 
-import com.example.findpix.data.repository.SearchImageRepository
 import com.example.findpix.domain.entity.LastSearchResult
+import com.example.findpix.domain.repository.SearchImageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
