@@ -7,7 +7,7 @@ import com.example.findpix.data.source.local.ImageDataTypeConverter
 import com.example.findpix.domain.entity.ImageItem
 
 @Entity(tableName = "last_search_results")
-data class LastSearch(
+data class LastSearchEntity(
     @PrimaryKey
     val primaryKey: Int = 1,
     val query: String,
@@ -18,21 +18,17 @@ data class LastSearch(
 data class ImageData(
     val imageId: Long = -1,
     val user: String,
-    val url: String,
+    val largeImageURL: String?,
+    val previewURL:String?,
+    val userImageURL: String?,
     val likes: String,
-    val downloads: String,
     val comments: String,
-    val views: String,
-    val tags: List<String>,
-    val largeImageURL: String,
-    val previewURL:String,
-    val userImageURL: String
+    val downloads: String,
+    val tags: List<String>
 ) {
     fun mapToImageEntity() = ImageItem(
         imageId = imageId,
         user = user,
-        url = previewURL,
-        views = views,
         likes = likes,
         downloads = downloads,
         comments = comments,

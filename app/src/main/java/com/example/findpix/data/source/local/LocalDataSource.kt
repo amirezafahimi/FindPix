@@ -1,6 +1,6 @@
 package com.example.findpix.data.source.local
 
-import com.example.findpix.data.source.local.entity.LastSearch
+import com.example.findpix.data.source.local.entity.LastSearchEntity
 import javax.inject.Inject
 
 /**
@@ -15,16 +15,16 @@ class LocalDataSourceImpl @Inject constructor(
     /**
      * Retrieves the last saved search result from the local database.
      *
-     * @return [LastSearch] representing the last saved search result, or null if not found.
+     * @return [LastSearchEntity] representing the last saved search result, or null if not found.
      */
-    override fun getLastSearchResult(): LastSearch? = appDao.getSearchResult()
+    override fun getLastSearchResult(): LastSearchEntity? = appDao.getSearchResult()
 
     /**
      * Saves the provided search result to the local database.
      *
-     * @param searchResult The [LastSearch] object to be saved.
+     * @param searchResult The [LastSearchEntity] object to be saved.
      */
-    override fun saveSearchResult(searchResult: LastSearch) {
+    override fun saveSearchResult(searchResult: LastSearchEntity) {
         appDao.insertSearchResult(searchResult)
     }
 }
@@ -37,14 +37,14 @@ interface LocalDataSource {
     /**
      * Retrieves the last saved search result from the local database.
      *
-     * @return [LastSearch] representing the last saved search result, or null if not found.
+     * @return [LastSearchEntity] representing the last saved search result, or null if not found.
      */
-    fun getLastSearchResult(): LastSearch?
+    fun getLastSearchResult(): LastSearchEntity?
 
     /**
      * Saves the provided search result to the local database.
      *
-     * @param searchResult The [LastSearch] object to be saved.
+     * @param searchResult The [LastSearchEntity] object to be saved.
      */
-    fun saveSearchResult(searchResult: LastSearch)
+    fun saveSearchResult(searchResult: LastSearchEntity)
 }

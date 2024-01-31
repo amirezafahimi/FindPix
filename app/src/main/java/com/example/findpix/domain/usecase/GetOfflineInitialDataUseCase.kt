@@ -1,6 +1,6 @@
 package com.example.findpix.domain.usecase
 
-import com.example.findpix.domain.entity.LastSearchResult
+import com.example.findpix.domain.entity.LastSearch
 import com.example.findpix.domain.repository.SearchImageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -14,9 +14,9 @@ class GetOfflineInitialDataUseCase @Inject constructor(
     /**
      * Executes the use case to retrieve offline initial data from the repository.
      *
-     * @return A flow emitting the last search result as [LastSearchResult].
+     * @return A flow emitting the last search result as [LastSearch].
      */
-    fun run(): Flow<LastSearchResult> = flow {
+    fun run(): Flow<LastSearch> = flow {
         // Emit the offline initial data retrieved from the repository
         emit(repository.getOfflineInitialData())
     }.flowOn(Dispatchers.IO) // Execute the flow on the IO dispatcher for background thread processing

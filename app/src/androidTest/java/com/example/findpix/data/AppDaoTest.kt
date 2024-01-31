@@ -1,8 +1,9 @@
-package com.example.findpix
+package com.example.findpix.data
 
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.findpix.createMockLastSearch
 import com.example.findpix.data.source.local.AppDao
 import com.example.findpix.data.source.local.Database
 import org.junit.After

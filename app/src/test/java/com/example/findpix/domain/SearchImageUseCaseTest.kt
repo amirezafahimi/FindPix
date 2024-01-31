@@ -1,24 +1,20 @@
-package com.example.findpix
+package com.example.findpix.domain
 
+import com.example.findpix.createMockImageItems
 import com.example.findpix.domain.entity.ImageItem
 import com.example.findpix.domain.repository.SearchImageRepository
 import com.example.findpix.domain.usecase.SearchImageUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
-import org.mockito.kotlin.any
 import org.mockito.kotlin.doThrow
-import org.mockito.kotlin.verify
 
 @ExperimentalCoroutinesApi
 class SearchImageUseCaseTest {

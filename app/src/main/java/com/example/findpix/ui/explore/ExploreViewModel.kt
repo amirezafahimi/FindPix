@@ -7,6 +7,8 @@ import com.example.findpix.domain.usecase.GetLastQueryUseCase
 import com.example.findpix.domain.usecase.GetOfflineInitialDataUseCase
 import com.example.findpix.domain.usecase.SearchImageUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -28,16 +30,17 @@ class ExploreViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(SearchResultState())
     val uiState: StateFlow<SearchResultState> = _uiState
 
+    private var searchJob: Job? = null
     /**
      * Initialize the ViewModel in offline mode by fetching initial data from the repository.
      */
     fun initOfflineMode() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getOfflineInitialDataUseCase.run().collect {
                 _lastQueryState.value = it.query
                 _uiState.value = uiState.value.copy(
                     isLoading = false,
-                    success = it.imagesData,
+                    success = it.imageItems,
                 )
             }
         }
@@ -49,7 +52,7 @@ class ExploreViewModel @Inject constructor(
     fun initOnlineMode() {
         _uiState.value = uiState.value.copy(isLoading = true)
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getLastQueryUseCase.run().collect {
                 _lastQueryState.value = it
                 searchImage(it)
@@ -65,7 +68,8 @@ class ExploreViewModel @Inject constructor(
     fun searchImage(query: String) {
         _uiState.value = uiState.value.copy(isLoading = true)
 
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch(Dispatchers.IO) {
             searchImageUseCase.run(query)
                 .catch { error ->
                     onError(error.message.toString())

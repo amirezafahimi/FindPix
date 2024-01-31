@@ -1,8 +1,8 @@
 package com.example.findpix.di
 
 import com.example.findpix.BuildConfig
-import com.example.findpix.data.source.remote.PixaBayDataSource
-import com.example.findpix.data.source.remote.PixaBayDataSourceImpl
+import com.example.findpix.data.source.remote.RemoteDataSource
+import com.example.findpix.data.source.remote.RemoteDataSourceImpl
 import com.example.findpix.data.source.remote.SearchApiService
 import dagger.Binds
 import dagger.Module
@@ -75,5 +75,5 @@ class ServiceModule {
 abstract class RemoteDataSourceModule {
     @Singleton
     @Binds
-    abstract fun providePixaBayDataSource(pixaBayDataSourceImpl: PixaBayDataSourceImpl): PixaBayDataSource
+    abstract fun providePixaBayDataSource(pixaBayDataSourceImpl: RemoteDataSourceImpl): RemoteDataSource
 }

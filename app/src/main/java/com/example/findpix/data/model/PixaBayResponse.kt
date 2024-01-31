@@ -86,8 +86,6 @@ data class ImageResponse(
     fun mapToImageEntity() = ImageItem(
         imageId = id?.toLong() ?: -1,
         user = user ?: "",
-        url = previewURL ?: "",
-        views = views.toString(),
         likes = likes.toString(),
         downloads = downloads.toString(),
         comments = comments.toString(),

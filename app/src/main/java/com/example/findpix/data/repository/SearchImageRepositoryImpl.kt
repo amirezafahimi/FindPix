@@ -2,15 +2,15 @@ package com.example.findpix.data.repository
 
 import com.example.findpix.data.source.local.LocalDataSource
 import com.example.findpix.data.source.local.entity.ImageData
-import com.example.findpix.data.source.local.entity.LastSearch
-import com.example.findpix.data.source.remote.PixaBayDataSource
-import com.example.findpix.domain.entity.LastSearchResult
+import com.example.findpix.data.source.local.entity.LastSearchEntity
+import com.example.findpix.data.source.remote.RemoteDataSource
+import com.example.findpix.domain.entity.LastSearch
 import com.example.findpix.domain.entity.ImageItem
 import com.example.findpix.domain.repository.SearchImageRepository
 import javax.inject.Inject
 
 class SearchImageRepositoryImpl @Inject constructor(
-    private val pixaBayDataSource: PixaBayDataSource,
+    private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
 ) : SearchImageRepository {
 
@@ -23,7 +23,7 @@ class SearchImageRepositoryImpl @Inject constructor(
      */
     override suspend fun fetchSearchResults(query: String): List<ImageItem> {
         return try {
-            val results = pixaBayDataSource.fetchSearchResults(query = query)
+            val results = remoteDataSource.fetchSearchResults(query = query)
 
             // Check if there are search results
             if (results.hits.isEmpty()) {
@@ -36,17 +36,15 @@ class SearchImageRepositoryImpl @Inject constructor(
             }.also { images ->
                 // Save the search results locally
                 localDataSource.saveSearchResult(
-                    LastSearch(
+                    LastSearchEntity(
                         query = query,
                         results = images.map { image ->
                             ImageData(
                                 imageId = image.imageId,
                                 user = image.user,
-                                url = image.url,
                                 likes = image.likes,
                                 downloads = image.downloads,
                                 comments = image.comments,
-                                views = image.views,
                                 tags = image.getTags(),
                                 largeImageURL = image.largeImageURL ?: "",
                                 previewURL = image.previewURL ?: "",
@@ -64,13 +62,13 @@ class SearchImageRepositoryImpl @Inject constructor(
     /**
      * Retrieves offline initial data, including the last search query and results.
      *
-     * @return [LastSearchResult] containing the last search query and results.
+     * @return [LastSearch] containing the last search query and results.
      */
-    override suspend fun getOfflineInitialData(): LastSearchResult {
+    override suspend fun getOfflineInitialData(): LastSearch {
         // Attempt to get the last search result from the local data source
         localDataSource.getLastSearchResult()?.let { search ->
-            return LastSearchResult(search.query, search.results.map { it.mapToImageEntity() })
-        } ?: return LastSearchResult("fruits", listOf()) // Default data if no offline data is available
+            return LastSearch(search.query, search.results.map { it.mapToImageEntity() })
+        } ?: return LastSearch("fruits", listOf()) // Default data if no offline data is available
     }
 
     /**
@@ -80,6 +78,8 @@ class SearchImageRepositoryImpl @Inject constructor(
      */
     override suspend fun getLastQuery(): String {
         // Attempt to get the last search result from the local data source
-        localDataSource.getLastSearchResult()?.let { return it.query } ?: return "fruits" // Default value if no last query is available
+        localDataSource.getLastSearchResult()?.let {
+            return it.query
+        } ?: return "fruits" // Default value if no last query is available
     }
 }

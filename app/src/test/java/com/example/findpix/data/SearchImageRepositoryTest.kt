@@ -1,13 +1,12 @@
-package com.example.findpix
+package com.example.findpix.data
 
-import com.example.findpix.data.model.ImageResponse
+import com.example.findpix.createMockImageItem
+import com.example.findpix.createMockImageResponses
+import com.example.findpix.createMockLastSearch
 import com.example.findpix.data.model.PixaBayResponse
 import com.example.findpix.data.repository.SearchImageRepositoryImpl
 import com.example.findpix.data.source.local.LocalDataSource
-import com.example.findpix.data.source.local.entity.ImageData
-import com.example.findpix.data.source.local.entity.LastSearch
-import com.example.findpix.data.source.remote.PixaBayDataSource
-import com.example.findpix.domain.entity.ImageItem
+import com.example.findpix.data.source.remote.RemoteDataSource
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -21,7 +20,7 @@ import org.mockito.MockitoAnnotations
 class SearchImageRepositoryTest {
 
     @Mock
-    private lateinit var mockPixaBayDataSource: PixaBayDataSource
+    private lateinit var mockRemoteDataSource: RemoteDataSource
 
     @Mock
     private lateinit var mockLocalDataSource: LocalDataSource
@@ -41,7 +40,7 @@ class SearchImageRepositoryTest {
         val imageResponses = createMockImageResponses()
         val pixaBayResponse = PixaBayResponse(imageResponses, 4713, 100)
 
-        `when`(mockPixaBayDataSource.fetchSearchResults(query)).thenReturn(pixaBayResponse)
+        `when`(mockRemoteDataSource.fetchSearchResults(query)).thenReturn(pixaBayResponse)
 
         val result = searchImageRepository.fetchSearchResults(query)
         val expected = imageResponses.map { it.mapToImageEntity() }
@@ -56,7 +55,7 @@ class SearchImageRepositoryTest {
         val query = "query"
         val pixaBayResponse = PixaBayResponse(emptyList(), 4713, 100)
 
-        `when`(mockPixaBayDataSource.fetchSearchResults(query)).thenReturn(pixaBayResponse)
+        `when`(mockRemoteDataSource.fetchSearchResults(query)).thenReturn(pixaBayResponse)
 
         val result = searchImageRepository.fetchSearchResults(query)
 
@@ -74,8 +73,8 @@ class SearchImageRepositoryTest {
         val result = searchImageRepository.getOfflineInitialData()
 
         assertEquals(query, result.query)
-        assertEquals(1, result.imagesData.size)
-        assertEquals(mockImageData.imageId, result.imagesData[0].imageId)
+        assertEquals(1, result.imageItems.size)
+        assertEquals(mockImageData.imageId, result.imageItems[0].imageId)
     }
 
     @Test
@@ -86,7 +85,7 @@ class SearchImageRepositoryTest {
         val result = searchImageRepository.getOfflineInitialData()
 
         assertEquals("fruits", result.query)
-        assertEquals(0, result.imagesData.size)
+        assertEquals(0, result.imageItems.size)
     }
 
     @Test

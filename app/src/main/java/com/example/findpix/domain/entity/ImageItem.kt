@@ -7,15 +7,13 @@ import kotlinx.android.parcel.Parcelize
 data class ImageItem(
     val imageId: Long = -1,
     val user: String,
-    val url: String,
-    val likes: String,
-    val downloads: String,
-    val comments: String,
-    val views: String,
-    private val tags: List<String>,
     val largeImageURL: String?,
     val previewURL:String?,
-    val userImageURL: String?
+    val userImageURL: String?,
+    val likes: String,
+    val comments: String,
+    val downloads: String,
+    private val tags: List<String>,
 ): Parcelable {
     fun getTags(): List<String> {
         val selectedStrings = mutableListOf<String>()

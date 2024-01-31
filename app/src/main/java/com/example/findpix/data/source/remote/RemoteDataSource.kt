@@ -4,13 +4,13 @@ import com.example.findpix.data.model.PixaBayResponse
 import javax.inject.Inject
 
 /**
- * Implementation of the [PixaBayDataSource] interface that uses [SearchApiService] to fetch search results from PixaBay.
+ * Implementation of the [RemoteDataSource] interface that uses [SearchApiService] to fetch search results from PixaBay.
  *
  * @param searchApiService The service for interacting with the PixaBay API.
  */
-class PixaBayDataSourceImpl @Inject constructor(
+class RemoteDataSourceImpl @Inject constructor(
     private val searchApiService: SearchApiService
-) : PixaBayDataSource {
+) : RemoteDataSource {
 
     /**
      * Fetches search results from the PixaBay API based on the provided query.
@@ -25,7 +25,7 @@ class PixaBayDataSourceImpl @Inject constructor(
 /**
  * Interface defining methods for fetching search results from the PixaBay data source.
  */
-interface PixaBayDataSource {
+interface RemoteDataSource {
     /**
      * Fetches search results from the PixaBay API based on the provided query.
      *

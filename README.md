@@ -22,12 +22,6 @@ The project is organized according to Clean Architecture principles:
 - **Domain Layer**: Contains business logic and use cases for interacting with the data.
 - **Presentation Layer**: Comprises the UI logic implemented with Jetpack Compose.
 
-## Initial Search Query
-
-When the user opens the app for the first time, the default search query is set to "fruits." This provides users with a predefined starting point to explore images related to fruits.
-However, after the initial launch, the app will remember the user's last search query. So, subsequent times the app is opened, it will automatically initiate a search with the last query used by the user.
-If the app has not been used before or if the user cleared their search history, it will default to the "fruits" search query again.
-
 ## Features
 
 1. **Search Functionality**: Users can enter keywords and search for images.
@@ -38,6 +32,12 @@ If the app has not been used before or if the user cleared their search history,
 6. **Default Search on Startup**: Initiates a search for the string "fruits" when the app launches for first time.
 7. **Configuration Changes Handling**: Gracefully handles configuration changes to preserve app state.
 
+## Initial Search Query
+
+When the user opens the app for the first time, the default search query is set to "fruits." This provides users with a predefined starting point to explore images related to fruits.
+However, after the initial launch, the app will remember the user's last search query. So, subsequent times the app is opened, it will automatically initiate a search with the last query used by the user.
+If the app has not been used before or if the user cleared their search history, it will default to the "fruits" search query again.
+
 ## Testing
 
-The project includes comprehensive unit tests and instrumented tests to ensure code correctness and reliability.
+The project includes some comprehensive unit tests and instrumented tests to ensure code correctness and reliability.
