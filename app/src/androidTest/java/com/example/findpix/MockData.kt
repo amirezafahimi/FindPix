@@ -2,7 +2,6 @@ package com.example.findpix
 
 import com.example.findpix.data.source.local.entity.ImageData
 import com.example.findpix.data.source.local.entity.LastSearch
-import com.example.findpix.domain.entity.ImageItem
 
 fun createMockLastSearch(): LastSearch {
     return LastSearch(

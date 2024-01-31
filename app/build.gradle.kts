@@ -83,6 +83,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
 
     implementation("com.google.dagger:hilt-android:2.48")
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.48")
     kapt("com.google.dagger:hilt-compiler:2.48")
 
     implementation("io.coil-kt:coil-compose:2.4.0")
