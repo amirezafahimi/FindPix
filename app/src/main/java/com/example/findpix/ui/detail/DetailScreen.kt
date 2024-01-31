@@ -77,7 +77,7 @@ internal fun DetailScreenContent(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            Color.Transparent, Color.Black.copy(0.8f)
+                            Color.Transparent, Color.Black.copy(0.7f)
                         ), startY = 500f
                     )
                 )
@@ -141,7 +141,7 @@ fun DetailBottomCard(
                         style = TextStyle(color = Color.White, fontSize = 12.sp),
                         modifier = Modifier
                             .background(
-                                color = Color.Black.copy(0.6f),
+                                color = Color.Black.copy(0.4f),
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(horizontal = 8.dp, vertical = 4.dp)
