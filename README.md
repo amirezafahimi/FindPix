@@ -22,22 +22,21 @@ The project is organized according to Clean Architecture principles:
 - **Domain Layer**: Contains business logic and use cases for interacting with the data.
 - **Presentation Layer**: Comprises the UI logic implemented with Jetpack Compose.
 
+## Initial Search Query
+
+When the user opens the app for the first time, the default search query is set to "fruits." This provides users with a predefined starting point to explore images related to fruits.
+However, after the initial launch, the app will remember the user's last search query. So, subsequent times the app is opened, it will automatically initiate a search with the last query used by the user.
+If the app has not been used before or if the user cleared their search history, it will default to the "fruits" search query again.
+
 ## Features
 
-1. **Search Functionality**: Users can enter keywords to search for images.
+1. **Search Functionality**: Users can enter keywords and search for images.
 2. **Pixabay API Integration**: Fetches and parses image data from the Pixabay API.
 3. **Results List**: Displays a list of image results with thumbnails, usernames, and tags.
 4. **Offline Caching**: Utilizes Room for local caching, providing offline access to previous search results.
 5. **Detailed View**: Allows users to view more details about an image, including a larger version, user's name, tags, likes, downloads, and comments.
 6. **Default Search on Startup**: Initiates a search for the string "fruits" when the app launches for first time.
 7. **Configuration Changes Handling**: Gracefully handles configuration changes to preserve app state.
-
-## Initial Search Query
-
-When the user opens the app for the first time, the default search query is set to "fruits." This provides users with a predefined starting point to explore images related to fruits.
-However, after the initial launch, the app will remember the user's last search query. So, subsequent times the app is opened, it will automatically initiate a search with the last query used by the user. This enhances the user experience by seamlessly continuing their exploration based on their previous interests.
-If the app has not been used before or if the user cleared their search history, it will default to the "fruits" search query again.
-This approach aims to strike a balance between providing a starting point for new users and maintaining continuity for returning users based on their search history.
 
 ## Testing
 
