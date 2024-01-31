@@ -359,7 +359,7 @@ fun SearchBox(
 
     TextField(
         modifier = modifier
-            .testTag("")
+            .testTag("SearchBox")
             .background(MaterialTheme.colorScheme.background),
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search,
@@ -380,7 +380,7 @@ fun SearchBox(
         },
         trailingIcon = {
             Icon(
-                modifier = Modifier.clickable(
+                modifier = Modifier.testTag("ClearBtn").clickable(
                     onClickLabel = stringResource(id = R.string.cd_clear_search)
                 ) {
                     query.value = ""
